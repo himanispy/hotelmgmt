@@ -1,0 +1,178 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AetherStay | Reimagining the Boutique Luxury Stay</title>
+    <link rel="stylesheet" href="./assets/css/style.css">
+</head>
+
+<body>
+
+    <!-- Hero Section -->
+    <section class="hero">
+        <div class="hero-content">
+            <span class="tagline-badge">✨ Reimagining the Boutique Stay</span>
+            <h1>Spacious Luxury for the Discerning Nomad</h1>
+            <p>A curated collection of architectural retreats and design-forward suites tailored for remote-first
+                executives.</p>
+
+            <!-- Vercel-Style Floating Booking Control Bar -->
+            <form action="booking.html" method="GET" class="search-control-bar">
+                <div class="search-field">
+                    <label for="hero-checkin">Check-in</label>
+                    <input type="date" id="hero-checkin" name="checkin" required>
+                </div>
+                <div class="search-field">
+                    <label for="hero-checkout">Check-out</label>
+                    <input type="date" id="hero-checkout" name="checkout" required>
+                </div>
+                <div class="search-field">
+                    <label for="hero-room">Suite Selection</label>
+                    <select id="hero-room" name="room">
+                        <option value="deluxe">Deluxe Alabaster - ₹3,000</option>
+                        <option value="executive">Executive Champagne - ₹5,000</option>
+                        <option value="suite">Royal Obsidian Penthouse - ₹8,000</option>
+                    </select>
+                </div>
+                <button type="submit" class="search-btn">Reserve Suite</button>
+            </form>
+        </div>
+    </section>
+
+    <!-- Metrics Columns Section -->
+    <section class="metrics-section">
+        <div class="metrics-grid">
+            <div class="metric-card">
+                <h2 id="metric-satisfaction">98.4%</h2>
+                <p>Satisfaction Rating</p>
+            </div>
+            <div class="metric-card">
+                <h2 id="metric-stays">14k+</h2>
+                <p>Luxury Stays Completed</p>
+            </div>
+            <div class="metric-card">
+                <h2 id="metric-concierge">24/7</h2>
+                <p>Elite Concierge Operations</p>
+            </div>
+            <div class="metric-card">
+                <h2 id="metric-rating">5.0★</h2>
+                <p>Verified Guest Review</p>
+            </div>
+        </div>
+    </section>
+
+    <!-- Dynamic Room Listing Section -->
+    <section class="rooms">
+        <div class="section-header">
+            <h2>The Suite Catalogue</h2>
+            <p>Explore our premium architectural suites, optimized for deep work and luxurious relaxation.</p>
+        </div>
+
+        <div class="room-container" id="roomsPreviewContainer">
+            <!-- Dynamically populated by JS core -->
+            <div class="skeleton" style="height: 400px; border-radius: var(--radius-lg);"></div>
+            <div class="skeleton" style="height: 400px; border-radius: var(--radius-lg);"></div>
+            <div class="skeleton" style="height: 400px; border-radius: var(--radius-lg);"></div>
+        </div>
+    </section>
+
+    <!-- Premium Amenities Section -->
+    <section class="amenities">
+        <div class="section-header">
+            <h2>SaaS-Grade Hospitality</h2>
+            <p>Every stay includes standard elite operations designed to keep you highly creative and deeply rested.</p>
+        </div>
+
+        <div class="amenity-list">
+            <div>
+                <span style="font-size: 32px; margin-bottom: 8px;">📶</span>
+                <h4>High-Speed Fiber</h4>
+                <p style="font-size: 13px; opacity: 0.65; margin-top: 4px;">Symmetric gigabit connection with redundant
+                    backhaul channels.</p>
+            </div>
+            <div>
+                <span style="font-size: 32px; margin-bottom: 8px;">🏊</span>
+                <h4>Infinity Pools</h4>
+                <p style="font-size: 13px; opacity: 0.65; margin-top: 4px;">Heated magnesium pool decks overlooking
+                    dramatic skylines.</p>
+            </div>
+            <div>
+                <span style="font-size: 32px; margin-bottom: 8px;">🍽️</span>
+                <h4>Organic Culinary</h4>
+                <p style="font-size: 13px; opacity: 0.65; margin-top: 4px;">Chef-curated morning lists utilizing local
+                    regenerative ingredients.</p>
+            </div>
+            <div>
+                <span style="font-size: 32px; margin-bottom: 8px;">💼</span>
+                <h4>Deep Workspace</h4>
+                <p style="font-size: 13px; opacity: 0.65; margin-top: 4px;">Herman Miller chairs, massive displays, and
+                    acoustic isolation.</p>
+            </div>
+        </div>
+    </section>
+
+    <!-- Guests Testimonial Section -->
+    <section class="testimonials">
+        <div class="section-header">
+            <h2>Verified Guest Experiences</h2>
+            <p>Read review feedback compiled directly from modern tech founders and design consultants.</p>
+        </div>
+
+        <div class="review">
+            <blockquote>"AetherStay completely reimagined my deep-work retreat. The champagne room environment, acoustic
+                isolation, and seamless Stripe checkout felt more like a premium software service than a hotel."
+            </blockquote>
+            <h4>- Himani tripathi,Himanshu Kushwaha, Founding Partner</h4>
+        </div>
+    </section>
+
+    <!-- Script Imports -->
+    <script src="./assets/js/main.js"></script>
+    <script>
+        document.addEventListener("DOMContentLoaded", () => {
+            // Setup minimum check-in boundary for search inputs
+            const checkinInput = document.getElementById("hero-checkin");
+            const checkoutInput = document.getElementById("hero-checkout");
+            const today = new Date().toISOString().split("T")[0];
+
+            checkinInput.min = today;
+            checkinInput.addEventListener("change", () => {
+                checkoutInput.min = checkinInput.value;
+            });
+
+            // Hydrate the dynamic room catalog preview cards
+            const container = document.getElementById("roomsPreviewContainer");
+            if (container) {
+                container.innerHTML = ""; // Clear loader skeletons
+
+                // Load first 3 suites from database
+                roomsData.slice(0, 3).forEach(room => {
+                    const card = document.createElement("div");
+                    card.className = "room-card";
+                    card.innerHTML = `
+                        <div class="room-image-wrapper">
+                            <img src="${room.image}" alt="${room.name}" loading="lazy">
+                            <span class="room-badge">${room.capacity}</span>
+                        </div>
+                        <div class="room-content">
+                            <h3>${room.name}</h3>
+                            <p class="room-desc">${room.description}</p>
+                            <div class="room-meta">
+                                <div class="room-price-info">
+                                    <span>Rate Per Night</span>
+                                    <div class="room-price-amount">₹${room.price.toLocaleString('en-IN')}</div>
+                                </div>
+                                <a href="booking.html?room=${room.id}" class="room-btn">Book Suite</a>
+                            </div>
+                        </div>
+                    `;
+                    container.appendChild(card);
+                });
+            }
+        });
+    </script>
+</body>
+
+</html>

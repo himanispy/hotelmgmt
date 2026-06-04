@@ -1,0 +1,149 @@
+/* ==========================================================================
+   ⚜️ AETHERSTAY CONTACT FORM LAYOUT
+   ========================================================================== */
+
+.contact-wrapper {
+    max-width: 1200px;
+    margin: var(--space-2xl) auto;
+    padding: 0 var(--space-sm);
+}
+
+.contact-grid {
+    display: grid;
+    grid-template-columns: 0.9fr 1.1fr;
+    gap: var(--space-2xl);
+    align-items: center;
+}
+
+/* Left Info Column */
+.contact-info-panel h1 {
+    font-size: clamp(36px, 5vw, 54px);
+    line-height: 1.15;
+    margin-bottom: var(--space-3xs);
+}
+
+.contact-badge {
+    display: inline-block;
+    font-size: 10px;
+    font-weight: 700;
+    text-transform: uppercase;
+    background: var(--color-brand-gold-light);
+    color: var(--color-brand-gold-hover);
+    padding: 6px 14px;
+    border-radius: var(--radius-full);
+    margin-bottom: var(--space-sm);
+    letter-spacing: 0.05em;
+}
+
+.panel-desc {
+    font-size: 16px;
+    color: var(--color-brand-primary);
+    opacity: 0.65;
+    margin-bottom: var(--space-xl);
+}
+
+.info-details {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-md);
+}
+
+.info-row {
+    display: flex;
+    align-items: flex-start;
+    gap: var(--space-sm);
+}
+
+.info-icon {
+    font-size: 24px;
+    opacity: 0.85;
+}
+
+.info-row h4 {
+    font-size: 15px;
+    font-weight: 600;
+    color: var(--color-brand-primary);
+    margin-bottom: 2px;
+}
+
+.info-row p {
+    font-size: 14px;
+    color: var(--color-brand-primary);
+    opacity: 0.55;
+}
+
+/* Right Glass Form Column */
+.glass-form-card {
+    background: var(--glass-bg);
+    border: 1px solid var(--glass-border);
+    backdrop-filter: var(--glass-blur);
+    -webkit-backdrop-filter: var(--glass-blur);
+    padding: var(--space-lg);
+    border-radius: var(--radius-lg);
+    box-shadow: var(--shadow-lg);
+}
+
+.contact-form {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-md);
+}
+
+.form-group {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-3xs);
+}
+
+.form-group label {
+    font-size: 11px;
+    font-weight: 700;
+    text-transform: uppercase;
+    color: var(--color-brand-primary);
+    opacity: 0.65;
+    letter-spacing: 0.05em;
+}
+
+.form-group input, .form-group textarea {
+    padding: 14px 18px;
+    background: var(--color-bg-card);
+    border: 1px solid var(--color-border);
+    border-radius: var(--radius-md);
+    font-size: 14px;
+    color: var(--color-brand-primary);
+    outline: none;
+    transition: var(--transition-fast);
+    resize: none;
+}
+
+.form-group input:focus, .form-group textarea:focus {
+    border-color: var(--color-brand-gold);
+    box-shadow: 0 0 0 3px var(--color-brand-gold-light);
+}
+
+.submit-inquiry-btn {
+    padding: 16px;
+    background: var(--color-brand-primary);
+    border: none;
+    color: #FFFFFF;
+    font-size: 14px;
+    font-weight: 600;
+    border-radius: var(--radius-md);
+    cursor: pointer;
+    transition: var(--transition-fast);
+    box-shadow: var(--shadow-sm);
+}
+
+.submit-inquiry-btn:hover {
+    background: var(--color-brand-gold-hover);
+    color: var(--color-brand-primary);
+    transform: translateY(-1px);
+    box-shadow: var(--shadow-md);
+}
+
+@media(max-width: 900px) {
+    .contact-grid {
+        grid-template-columns: 1fr;
+        gap: var(--space-2xl);
+    }
+}

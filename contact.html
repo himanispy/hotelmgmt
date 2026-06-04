@@ -1,0 +1,121 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Elite Concierge Inquiry | AetherStay</title>
+    <link rel="stylesheet" href="./assets/css/style.css">
+    <link rel="stylesheet" href="./assets/css/contact.css">
+</head>
+<body>
+
+    <!-- Header navigation dynamically injected here by main.js -->
+
+    <main class="contact-wrapper">
+        <div class="contact-grid">
+            
+            <!-- Left Info Panel -->
+            <section class="contact-info-panel">
+                <span class="contact-badge">💎 Direct Line</span>
+                <h1>Connect With Our Concierge</h1>
+                <p class="panel-desc">Submit an operational inquiry or requests for bespoke multi-week allocations.</p>
+                
+                <div class="info-details">
+                    <div class="info-row">
+                        <span class="info-icon">📍</span>
+                        <div>
+                            <h4>Global Operations</h4>
+                            <p>12 Alabaster Drive, Tech Sector 4</p>
+                        </div>
+                    </div>
+                    <div class="info-row">
+                        <span class="info-icon">✉️</span>
+                        <div>
+                            <h4>Corporate Desk</h4>
+                            <p>concierge@aetherstay.so</p>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Right Form Panel -->
+            <section class="contact-form-panel">
+                <div class="glass-form-card">
+                    <form id="contactForm" class="contact-form">
+                        <div class="form-group">
+                            <label for="contact-name">Full Name</label>
+                            <input
+                                type="text"
+                                id="contact-name"
+                                placeholder="e.g. Jane Doe"
+                                required>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="contact-email">Email Address</label>
+                            <input
+                                type="email"
+                                id="contact-email"
+                                placeholder="e.g. jane@company.so"
+                                required>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="contact-message">Bespoke Requests / Message</label>
+                            <textarea
+                                id="contact-message"
+                                placeholder="Describe room allocations, wellness desires, or custom dietary parameters..."
+                                rows="5"
+                                required></textarea>
+                        </div>
+
+                        <button type="submit" class="submit-inquiry-btn">
+                            Transmit Inquiry
+                        </button>
+                    </form>
+                </div>
+            </section>
+
+        </div>
+    </main>
+
+    <!-- Script Imports -->
+    <script src="./assets/js/main.js"></script>
+    <script>
+        document.addEventListener("DOMContentLoaded", () => {
+            const form = document.getElementById("contactForm");
+            if (form) {
+                form.addEventListener("submit", (e) => {
+                    e.preventDefault();
+                    
+                    const name = document.getElementById("contact-name").value.trim();
+                    const email = document.getElementById("contact-email").value.trim();
+                    const message = document.getElementById("contact-message").value.trim();
+                    
+                    const messageData = {
+                        id: `MSG-${Date.now()}`,
+                        name: name,
+                        email: email,
+                        message: message,
+                        timestamp: new Date().toISOString()
+                    };
+                    
+                    try {
+                        // Log inquiry to LocalStorage database securely
+                        let messages = JSON.parse(localStorage.getItem("aetherstay_messages")) || [];
+                        messages.push(messageData);
+                        localStorage.setItem("aetherstay_messages", JSON.stringify(messages));
+                        
+                        // Emit high-fidelity action toast
+                        Toast.show("Inquiry transmitted successfully. Our concierge will contact you.", "success");
+                        
+                        form.reset();
+                    } catch (err) {
+                        Toast.show("Failed to log inquiry. Browser quota error.", "danger");
+                    }
+                });
+            }
+        });
+    </script>
+</body>
+</html>

@@ -1,0 +1,337 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AetherOS Operations Center</title>
+    <link rel="stylesheet" href="./assets/css/style.css">
+    <link rel="stylesheet" href="./assets/css/admin.css">
+</head>
+<body>
+
+    <!-- ============================================================
+         AUTH SHIELD
+         ============================================================ -->
+    <div id="authScreen" class="auth-layer">
+        <div class="auth-glass-card">
+            <div class="auth-logo">Aether<span>OS</span></div>
+            <span class="auth-badge">🔒 Secure Operations Access</span>
+            <h2>Enter Authorization Key</h2>
+            <p>This terminal is restricted to verified hotel operators only.</p>
+            <input type="password" id="authPin" placeholder="••••" maxlength="4" autofocus
+                onkeyup="if(event.key==='Enter') verifyAdminAccess()">
+            <button id="authBtn" onclick="verifyAdminAccess()">Authorize Terminal</button>
+            <p class="auth-demo-hint">Demo PIN: <strong>2026</strong></p>
+        </div>
+    </div>
+
+    <!-- ============================================================
+         AETHEROS COMMAND SHELL
+         ============================================================ -->
+    <main id="adminDashboard" class="admin-shell" style="display:none;">
+
+        <!-- ── SIDEBAR ──────────────────────────────────────────── -->
+        <aside class="dashboard-sidebar">
+            <div class="sidebar-header">
+                <div class="sidebar-logo">Aether<span>OS</span></div>
+                <span class="version-tag">v2.0</span>
+            </div>
+
+            <nav class="sidebar-nav-group">
+                <p class="nav-group-label">Operations</p>
+                <ul class="sidebar-nav">
+                    <li><button class="side-btn active" onclick="switchTab('overview')">🎛️ Overview</button></li>
+                    <li><button class="side-btn" onclick="switchTab('analytics')">📈 Revenue Analytics</button></li>
+                    <li><button class="side-btn" onclick="switchTab('timeline')">📅 Room Scheduler</button></li>
+                    <li><button class="side-btn" onclick="switchTab('crm')">👥 Guest CRM</button></li>
+                </ul>
+            </nav>
+
+            <nav class="sidebar-nav-group">
+                <p class="nav-group-label">Management</p>
+                <ul class="sidebar-nav">
+                    <li><button class="side-btn" onclick="switchTab('housekeeping')">🧹 Housekeeping</button></li>
+                    <li><button class="side-btn" onclick="switchTab('ai_pricing')">🤖 AI Pricing</button></li>
+                    <li><button class="side-btn" onclick="switchTab('messages')">✉️ Inbox</button></li>
+                    <li><button class="side-btn" onclick="switchTab('audit')">🛡️ Audit Log</button></li>
+                </ul>
+            </nav>
+
+            <div class="sidebar-footer">
+                <a href="index.html" class="sidebar-link-btn">← Back to Site</a>
+                <button onclick="terminateAdminSession()" class="logout-btn">🔒 Lock Terminal</button>
+            </div>
+        </aside>
+
+        <!-- ── MAIN CONTENT ─────────────────────────────────────── -->
+        <div class="dashboard-content">
+
+            <header class="content-header">
+                <div>
+                    <h1 id="tabTitle">Operations Overview</h1>
+                    <p id="tabSubtitle">Real-time analytics for AetherStay boutique operations.</p>
+                </div>
+                <div style="display:flex;align-items:center;gap:12px;">
+                    <div class="live-indicator"><span class="pulse-dot"></span> Live</div>
+                    <button class="theme-toggle-btn" onclick="ThemeEngine.toggle()">🌙</button>
+                </div>
+            </header>
+
+            <!-- ══ TAB: OVERVIEW ═══════════════════════════════════════ -->
+            <section id="tab-overview" class="tab-pane active">
+                <div class="kpi-grid">
+                    <div class="kpi-card kpi-gold">
+                        <div class="kpi-icon">💹</div>
+                        <div class="kpi-body">
+                            <div class="kpi-value" id="kpiRevenue">₹0</div>
+                            <div class="kpi-label">Gross Revenue</div>
+                            <div class="kpi-trend" id="kpiRevenueTrend">—</div>
+                        </div>
+                    </div>
+                    <div class="kpi-card">
+                        <div class="kpi-icon">📦</div>
+                        <div class="kpi-body">
+                            <div class="kpi-value" id="kpiBookings">0</div>
+                            <div class="kpi-label">Total Bookings</div>
+                            <div class="kpi-trend" id="kpiBookingsTrend">—</div>
+                        </div>
+                    </div>
+                    <div class="kpi-card">
+                        <div class="kpi-icon">🛏️</div>
+                        <div class="kpi-body">
+                            <div class="kpi-value" id="kpiOccupancy">0%</div>
+                            <div class="kpi-label">Occupancy Rate</div>
+                            <div class="kpi-trend" id="kpiOccupancyTrend">—</div>
+                        </div>
+                    </div>
+                    <div class="kpi-card">
+                        <div class="kpi-icon">⭐</div>
+                        <div class="kpi-body">
+                            <div class="kpi-value" id="kpiAvgNights">0</div>
+                            <div class="kpi-label">Avg. Nights / Stay</div>
+                            <div class="kpi-trend">Per booking</div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="overview-split">
+                    <!-- Mini Revenue Sparkline -->
+                    <div class="panel-card">
+                        <div class="panel-header">
+                            <h3>Revenue Trend</h3>
+                            <span class="panel-badge">Last 7 bookings</span>
+                        </div>
+                        <svg id="sparklineSvg" class="sparkline-svg" viewBox="0 0 400 80" preserveAspectRatio="none"></svg>
+                    </div>
+
+                    <!-- Operational Checklist -->
+                    <div class="panel-card">
+                        <div class="panel-header">
+                            <h3>Today's Checklist</h3>
+                            <span class="panel-badge" id="checklistBadge">0/4 done</span>
+                        </div>
+                        <ul class="clean-checklist" id="overviewChecklist">
+                            <li><label><input type="checkbox" onchange="updateChecklistBadge()"> Verify pool water filtration for Suite 101</label></li>
+                            <li><label><input type="checkbox" onchange="updateChecklistBadge()"> Restock wine cellar — Penthouse VIP arriving today</label></li>
+                            <li><label><input type="checkbox" onchange="updateChecklistBadge()" checked> Pre-chill champagne for Executive check-ins</label></li>
+                            <li><label><input type="checkbox" onchange="updateChecklistBadge()"> Generate weekly financial backup export</label></li>
+                        </ul>
+                    </div>
+                </div>
+
+                <!-- System Health -->
+                <div class="panel-card" style="margin-top:var(--space-lg);">
+                    <div class="panel-header">
+                        <h3>System Integrity</h3>
+                    </div>
+                    <div class="status-grid">
+                        <div class="status-row"><span>AI Dynamic Pricing Engine</span><span class="status-pill status-active">Operational</span></div>
+                        <div class="status-row"><span>Booking CRM Database</span><span class="status-pill status-active">Synchronized</span></div>
+                        <div class="status-row"><span>Local Storage Nodes</span><span class="status-pill status-active">Online</span></div>
+                        <div class="status-row"><span>Concierge AI Chatbot</span><span class="status-pill status-active">Responding</span></div>
+                        <div class="status-row"><span>Audit Trail Logger</span><span class="status-pill status-active">Active</span></div>
+                        <div class="status-row"><span>Theme Engine</span><span class="status-pill status-active">Initialized</span></div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- ══ TAB: ANALYTICS ══════════════════════════════════════ -->
+            <section id="tab-analytics" class="tab-pane">
+                <div class="panel-card">
+                    <div class="panel-header">
+                        <h3>Revenue Analytics Chart</h3>
+                        <span class="panel-badge">All Bookings</span>
+                    </div>
+                    <div class="chart-legend">
+                        <span class="legend-dot" style="background:var(--color-brand-gold);"></span> Revenue per booking
+                    </div>
+                    <div class="svg-chart-container">
+                        <svg id="revenueChartSvg" class="revenue-chart-svg" viewBox="0 0 700 220" preserveAspectRatio="none"></svg>
+                    </div>
+                </div>
+
+                <div class="analytics-split">
+                    <div class="panel-card">
+                        <div class="panel-header"><h3>Suite Popularity</h3></div>
+                        <div id="suiteBreakdown" class="suite-breakdown-list"></div>
+                    </div>
+                    <div class="panel-card">
+                        <div class="panel-header"><h3>Revenue Forecast</h3><span class="panel-badge">AI Prediction</span></div>
+                        <div class="forecast-grid" id="forecastGrid"></div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- ══ TAB: TIMELINE ═══════════════════════════════════════ -->
+            <section id="tab-timeline" class="tab-pane">
+                <div class="panel-card">
+                    <div class="panel-header">
+                        <h3>Room Allocation Grid</h3>
+                        <span class="panel-badge">Live Scheduler</span>
+                    </div>
+                    <div id="timelineGridContainer" class="timeline-visual-grid"></div>
+                </div>
+            </section>
+
+            <!-- ══ TAB: GUEST CRM ══════════════════════════════════════ -->
+            <section id="tab-crm" class="tab-pane">
+                <div class="panel-card">
+                    <div class="panel-header flex-header">
+                        <div>
+                            <h3>Guest CRM Database</h3>
+                            <p>Manage reservations, compute LTV, and export records.</p>
+                        </div>
+                        <div style="display:flex;gap:8px;flex-wrap:wrap;">
+                            <button onclick="exportCsvBookings()" class="action-btn-outline">⬇ Export CSV</button>
+                            <button onclick="clearAllBookings()" class="danger-btn-outline">🗑 Wipe CRM</button>
+                        </div>
+                    </div>
+                    <div class="table-scroll-wrapper">
+                        <table class="aether-table">
+                            <thead>
+                                <tr>
+                                    <th>Ref ID</th>
+                                    <th>Guest</th>
+                                    <th>Suite</th>
+                                    <th>Nights</th>
+                                    <th>Total</th>
+                                    <th>LTV Score</th>
+                                    <th>Actions</th>
+                                </tr>
+                            </thead>
+                            <tbody id="bookingTable"></tbody>
+                        </table>
+                    </div>
+                </div>
+            </section>
+
+            <!-- ══ TAB: HOUSEKEEPING ═══════════════════════════════════ -->
+            <section id="tab-housekeeping" class="tab-pane">
+                <div class="panel-card">
+                    <div class="panel-header flex-header">
+                        <div>
+                            <h3>Housekeeping Operations</h3>
+                            <p>Assign, track, and complete room maintenance tasks.</p>
+                        </div>
+                        <button onclick="showAddTaskModal()" class="action-btn-primary">+ New Task</button>
+                    </div>
+
+                    <!-- Add Task Form (inline, hidden by default) -->
+                    <div id="addTaskForm" class="add-task-form" style="display:none;">
+                        <input type="text" id="newTaskText" placeholder="e.g. Deep clean Suite 103 — high priority" class="task-input">
+                        <select id="newTaskRoom" class="task-select">
+                            <option value="Suite 101 — Deluxe">Suite 101 — Deluxe</option>
+                            <option value="Suite 102 — Executive">Suite 102 — Executive</option>
+                            <option value="Suite 103 — Penthouse">Suite 103 — Penthouse</option>
+                            <option value="Common Areas">Common Areas</option>
+                        </select>
+                        <select id="newTaskPriority" class="task-select">
+                            <option value="high">🔴 High Priority</option>
+                            <option value="medium">🟡 Medium Priority</option>
+                            <option value="low">🟢 Low Priority</option>
+                        </select>
+                        <div style="display:flex;gap:8px;">
+                            <button onclick="addHousekeepingTask()" class="action-btn-primary">Add Task</button>
+                            <button onclick="document.getElementById('addTaskForm').style.display='none'" class="danger-btn-outline">Cancel</button>
+                        </div>
+                    </div>
+
+                    <div id="housekeepingList" class="housekeeping-list"></div>
+                </div>
+            </section>
+
+            <!-- ══ TAB: AI PRICING ════════════════════════════════════ -->
+            <section id="tab-ai_pricing" class="tab-pane">
+                <div class="panel-card">
+                    <div class="panel-header flex-header">
+                        <div>
+                            <h3>🤖 AI Autopilot Pricing Engine</h3>
+                            <p>Algorithmic dynamic rate management based on occupancy, season, and demand signals.</p>
+                        </div>
+                        <div class="toggle-switch-wrapper">
+                            <span id="autopilotStatus" style="font-size:13px;font-weight:600;">Disabled</span>
+                            <label class="toggle-switch">
+                                <input type="checkbox" id="autopilotToggle" onchange="toggleAutopilot(this.checked)">
+                                <span class="toggle-slider"></span>
+                            </label>
+                        </div>
+                    </div>
+
+                    <div class="ai-pricing-grid" id="aiPricingGrid"></div>
+
+                    <div class="panel-header" style="margin-top:var(--space-lg);border-top:1px solid var(--color-border);padding-top:var(--space-lg);">
+                        <h3>Revenue Forecasting Calculator</h3>
+                        <p>Model projected revenue under different occupancy scenarios.</p>
+                    </div>
+                    <div class="forecast-calculator">
+                        <div class="form-group" style="max-width:300px;">
+                            <label for="forecastOccupancy">Projected Occupancy Rate (%)</label>
+                            <input type="range" id="forecastOccupancy" min="10" max="100" value="75" oninput="recalcForecast(this.value)">
+                        </div>
+                        <div class="forecast-output" id="forecastOutput">
+                            <div class="forecast-stat"><span>Monthly Revenue</span><strong id="fcastMonthly">₹0</strong></div>
+                            <div class="forecast-stat"><span>Quarterly Revenue</span><strong id="fcastQuarterly">₹0</strong></div>
+                            <div class="forecast-stat"><span>Annual Revenue</span><strong id="fcastAnnual">₹0</strong></div>
+                        </div>
+                        <p id="occupancyLabel" style="font-size:12px;opacity:0.5;margin-top:4px;">Occupancy: 75%</p>
+                    </div>
+                </div>
+            </section>
+
+            <!-- ══ TAB: INBOX ══════════════════════════════════════════ -->
+            <section id="tab-messages" class="tab-pane">
+                <div class="panel-card">
+                    <div class="panel-header flex-header">
+                        <div>
+                            <h3>Concierge Inbox</h3>
+                            <p>Direct inquiries submitted by guests from the contact form.</p>
+                        </div>
+                        <button onclick="clearAllMessages()" class="danger-btn-outline">🗑 Clear Inbox</button>
+                    </div>
+                    <div class="message-feed-grid" id="messageFeedContainer">
+                        <div class="feed-empty-state"><span>✉️</span><p>No client inquiries logged yet.</p></div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- ══ TAB: AUDIT LOG ══════════════════════════════════════ -->
+            <section id="tab-audit" class="tab-pane">
+                <div class="panel-card">
+                    <div class="panel-header flex-header">
+                        <div>
+                            <h3>🛡️ Security Audit Trail</h3>
+                            <p>Immutable log of all platform events and operations.</p>
+                        </div>
+                        <button onclick="clearAuditLog()" class="danger-btn-outline">Clear Log</button>
+                    </div>
+                    <div class="audit-feed" id="auditFeed"></div>
+                </div>
+            </section>
+
+        </div><!-- /dashboard-content -->
+    </main><!-- /admin-shell -->
+
+    <script src="./assets/js/main.js"></script>
+    <script src="./assets/js/admin.js"></script>
+</body>
+</html>

@@ -1,0 +1,148 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Visual Slideshow Gallery | AetherStay</title>
+    <link rel="stylesheet" href="./assets/css/style.css">
+    <link rel="stylesheet" href="./assets/css/gallery.css">
+</head>
+<body>
+
+    <!-- Dynamic Header Navbar will be injected here by main.js -->
+
+    <header class="gallery-header">
+        <div class="header-inner">
+            <h1>Immersive Retreat Visuals</h1>
+            <p>A photographic catalog showcasing our architecture, design details, and wellness areas.</p>
+            
+            <div class="gallery-category-chips">
+                <button class="chip active" onclick="filterGallery('all')">All Images</button>
+                <button class="chip" onclick="filterGallery('suites')">Architectural Suites</button>
+                <button class="chip" onclick="filterGallery('culinary')">Culinary Design</button>
+                <button class="chip" onclick="filterGallery('wellness')">Wellness Areas</button>
+            </div>
+        </div>
+    </header>
+
+    <main class="gallery-section">
+        <div class="gallery-grid" id="galleryContainer">
+            
+            <!-- Category: Suites -->
+            <div class="gallery-item suites" onclick="openLightbox(this)">
+                <img src="https://images.unsplash.com/photo-1566073771259-6a8506099945?w=1000&q=80" alt="Alabaster Suite Lounge" loading="lazy">
+                <div class="item-overlay"><span>View Alabaster Lounge</span></div>
+            </div>
+            
+            <div class="gallery-item suites" onclick="openLightbox(this)">
+                <img src="https://images.unsplash.com/photo-1578683010236-d716f9a3f461?w=1000&q=80" alt="Executive Travertine Bath" loading="lazy">
+                <div class="item-overlay"><span>View Travertine Bath</span></div>
+            </div>
+
+            <!-- Category: Culinary -->
+            <div class="gallery-item culinary" onclick="openLightbox(this)">
+                <img src="https://images.unsplash.com/photo-1551882547-ff40c63fe5fa?w=1000&q=80" alt="Al Fresco Wine Lounge" loading="lazy">
+                <div class="item-overlay"><span>View Wine Lounge</span></div>
+            </div>
+
+            <!-- Category: Suites -->
+            <div class="gallery-item suites" onclick="openLightbox(this)">
+                <img src="https://images.unsplash.com/photo-1582719508461-905c673771fd?w=1000&q=80" alt="Royal Penthouse Splash Pool" loading="lazy">
+                <div class="item-overlay"><span>View Splash Pool</span></div>
+            </div>
+
+            <!-- Category: Wellness -->
+            <div class="gallery-item wellness" onclick="openLightbox(this)">
+                <img src="https://images.unsplash.com/photo-1564501049412-61c2a3083791?w=1000&q=80" alt="Heated Magnesium Pool Deck" loading="lazy">
+                <div class="item-overlay"><span>View Magnesium Pool</span></div>
+            </div>
+
+            <!-- Category: Culinary -->
+            <div class="gallery-item culinary" onclick="openLightbox(this)">
+                <img src="https://images.unsplash.com/photo-1590490360182-c33d57733427?w=1000&q=80" alt="Regenerative Morning Plate" loading="lazy">
+                <div class="item-overlay"><span>View Morning Plate</span></div>
+            </div>
+
+        </div>
+    </main>
+
+    <!-- Immersive Lightbox Modal Element -->
+    <div id="lightboxModal" class="lightbox-overlay" onclick="closeLightbox(event)">
+        <span class="lightbox-close" onclick="closeLightbox(event)">&times;</span>
+        <div class="lightbox-content-wrapper">
+            <img id="lightboxImage" src="" alt="Expanded View">
+            <p id="lightboxCaption">Image Caption</p>
+        </div>
+    </div>
+
+    <!-- Script Imports -->
+    <script src="./assets/js/main.js"></script>
+    <script>
+        /**
+         * Dynamic image category filter controls
+         */
+        function filterGallery(category) {
+            const chips = document.querySelectorAll(".chip");
+            chips.forEach(c => c.classList.remove("active"));
+            
+            // Add active focus state
+            event.target.classList.add("active");
+            
+            const items = document.querySelectorAll(".gallery-item");
+            items.forEach(item => {
+                if (category === "all" || item.classList.contains(category)) {
+                    item.style.display = "block";
+                    // Dynamic fade-in effect
+                    setTimeout(() => item.style.opacity = "1", 20);
+                } else {
+                    item.style.opacity = "0";
+                    setTimeout(() => item.style.display = "none", 300);
+                }
+            });
+        }
+
+        /**
+         * Open dynamic Lightbox absolute viewer
+         */
+        function openLightbox(element) {
+            const img = element.querySelector("img");
+            const modal = document.getElementById("lightboxModal");
+            const modalImg = document.getElementById("lightboxImage");
+            const caption = document.getElementById("lightboxCaption");
+            
+            if (!modal || !modalImg) return;
+            
+            modalImg.src = img.src;
+            caption.innerText = img.alt;
+            
+            modal.style.display = "flex";
+            setTimeout(() => modal.classList.add("open"), 10);
+            
+            // Keyboard listener
+            document.addEventListener("keydown", handleLightboxEsc);
+        }
+
+        /**
+         * Close dynamic Lightbox absolute viewer
+         */
+        function closeLightbox(event) {
+            // Close only if click background or click 'x'
+            if (event.target.id === "lightboxModal" || event.target.className === "lightbox-close") {
+                const modal = document.getElementById("lightboxModal");
+                modal.classList.remove("open");
+                setTimeout(() => modal.style.display = "none", 300);
+                document.removeEventListener("keydown", handleLightboxEsc);
+            }
+        }
+
+        function handleLightboxEsc(e) {
+            if (e.key === "Escape") {
+                const modal = document.getElementById("lightboxModal");
+                modal.classList.remove("open");
+                setTimeout(() => modal.style.display = "none", 300);
+                document.removeEventListener("keydown", handleLightboxEsc);
+            }
+        }
+    </script>
+</body>
+</html>

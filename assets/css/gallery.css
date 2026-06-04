@@ -1,0 +1,176 @@
+/* ==========================================================================
+   ⚜️ AETHERSTAY MASONRY GALLERY & LIGHTBOX STYLING
+   ========================================================================== */
+
+.gallery-header {
+    background: var(--color-brand-primary);
+    color: #FFFFFF;
+    padding: var(--space-2xl) var(--space-sm) var(--space-xl) var(--space-sm);
+    text-align: center;
+    border-bottom: 1px solid rgba(255,255,255,0.05);
+}
+
+.gallery-category-chips {
+    display: flex;
+    justify-content: center;
+    gap: var(--space-xs);
+    flex-wrap: wrap;
+    margin-top: var(--space-md);
+}
+
+.chip {
+    padding: 8px 18px;
+    background: rgba(255,255,255,0.05);
+    border: 1px solid rgba(255,255,255,0.1);
+    color: #FFFFFF;
+    font-size: 13px;
+    font-weight: 500;
+    border-radius: var(--radius-full);
+    cursor: pointer;
+    transition: var(--transition-fast);
+}
+
+.chip:hover {
+    background: rgba(255,255,255,0.1);
+    border-color: rgba(255,255,255,0.2);
+}
+
+.chip.active {
+    background: var(--color-brand-gold);
+    border-color: var(--color-brand-gold);
+    color: var(--color-brand-primary);
+    font-weight: 600;
+}
+
+/* Gallery Section Layout */
+.gallery-section {
+    padding: var(--space-2xl) var(--space-sm);
+    max-width: 1200px;
+    margin: 0 auto;
+}
+
+.gallery-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(350px, 1fr));
+    gap: var(--space-md);
+    transition: var(--transition-smooth);
+}
+
+.gallery-item {
+    position: relative;
+    border-radius: var(--radius-lg);
+    overflow: hidden;
+    height: 280px;
+    cursor: pointer;
+    box-shadow: var(--shadow-sm);
+    border: 1px solid var(--color-border-light);
+    transition: var(--transition-smooth);
+    opacity: 1;
+}
+
+.gallery-item img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    transition: var(--transition-smooth);
+}
+
+.item-overlay {
+    position: absolute;
+    inset: 0;
+    background: rgba(18, 18, 17, 0.45);
+    backdrop-filter: blur(2px);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    opacity: 0;
+    transition: var(--transition-fast);
+}
+
+.item-overlay span {
+    font-family: var(--font-serif);
+    font-size: 20px;
+    color: #FFFFFF;
+    border-bottom: 1px solid var(--color-brand-gold);
+    padding-bottom: 4px;
+}
+
+.gallery-item:hover {
+    transform: translateY(-4px);
+    box-shadow: var(--shadow-lg);
+}
+
+.gallery-item:hover img {
+    transform: scale(1.04);
+}
+
+.gallery-item:hover .item-overlay {
+    opacity: 1;
+}
+
+/* Immersive Lightbox Modal styling */
+.lightbox-overlay {
+    display: none;
+    position: fixed;
+    inset: 0;
+    z-index: 999999;
+    background: var(--color-bg-overlay-dark);
+    backdrop-filter: blur(15px);
+    -webkit-backdrop-filter: blur(15px);
+    justify-content: center;
+    align-items: center;
+    opacity: 0;
+    transition: var(--transition-smooth);
+}
+
+.lightbox-overlay.open {
+    opacity: 1;
+}
+
+.lightbox-content-wrapper {
+    max-width: 90%;
+    max-height: 80%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    transform: scale(0.95);
+    transition: var(--transition-smooth);
+}
+
+.lightbox-overlay.open .lightbox-content-wrapper {
+    transform: scale(1);
+}
+
+.lightbox-content-wrapper img {
+    max-width: 100%;
+    max-height: 70vh;
+    object-fit: contain;
+    border-radius: var(--radius-md);
+    box-shadow: var(--shadow-lg);
+    border: 1px solid rgba(255,255,255,0.1);
+}
+
+#lightboxCaption {
+    font-family: var(--font-serif);
+    font-size: 22px;
+    color: #FFFFFF;
+    margin-top: var(--space-sm);
+    text-align: center;
+    letter-spacing: -0.01em;
+}
+
+.lightbox-close {
+    position: absolute;
+    top: 32px;
+    right: 32px;
+    font-size: 40px;
+    color: #FFFFFF;
+    cursor: pointer;
+    opacity: 0.65;
+    transition: var(--transition-fast);
+}
+
+.lightbox-close:hover {
+    opacity: 1;
+    transform: scale(1.1);
+}

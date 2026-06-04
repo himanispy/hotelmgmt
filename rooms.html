@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Explore Suites | AetherStay</title>
+    <link rel="stylesheet" href="./assets/css/style.css">
+    <link rel="stylesheet" href="./assets/css/rooms.css">
+</head>
+<body>
+
+    <!-- Header navigation will be dynamically injected here by main.js -->
+
+    <!-- Premium Filters Header Panel -->
+    <header class="catalogue-header">
+        <div class="header-inner">
+            <h1>Suite Catalogue</h1>
+            <p>Select an architectural space meticulously tuned for your operational flow.</p>
+            
+            <div class="search-filter-widget">
+                <div class="search-input-wrapper">
+                    <span class="search-icon">🔍</span>
+                    <input
+                        type="text"
+                        id="search"
+                        placeholder="Search suite, features, or amenities..."
+                        onkeyup="searchRoom()">
+                </div>
+                <div class="select-filter-wrapper">
+                    <select id="priceFilter" onchange="searchRoom()">
+                        <option value="all">All Rates</option>
+                        <option value="4000">Under ₹4,000</option>
+                        <option value="6000">Under ₹6,000</option>
+                        <option value="8000+">₹8,000 & Above</option>
+                    </select>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <!-- Dynamic Room Catalogue Grid -->
+    <section class="rooms-explorer">
+        <div class="room-container" id="roomsCatalogueContainer">
+            <!-- Dynamically populated from central memory model -->
+            <div class="skeleton" style="height: 400px; border-radius: var(--radius-lg);"></div>
+            <div class="skeleton" style="height: 400px; border-radius: var(--radius-lg);"></div>
+            <div class="skeleton" style="height: 400px; border-radius: var(--radius-lg);"></div>
+        </div>
+        
+        <!-- Empty State Fallback -->
+        <div id="noResults" class="empty-state-card" style="display: none;">
+            <span class="empty-icon">🔍</span>
+            <h3>No Retreats Match Your Search</h3>
+            <p>Adjust your pricing limits or query tags to discover other design rooms.</p>
+            <button onclick="resetSearchFilters()" class="reset-search-btn">Reset Catalog Filters</button>
+        </div>
+    </section>
+
+    <!-- Dynamic Layout Injector Scripts -->
+    <script src="./assets/js/main.js"></script>
+    <script src="./assets/js/search.js"></script>
+</body>
+</html>

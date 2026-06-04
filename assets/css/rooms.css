@@ -1,0 +1,154 @@
+/* ==========================================================================
+   ⚜️ AETHERSTAY ROOMS CATALOGUE LAYOUT
+   ========================================================================== */
+
+.catalogue-header {
+    background: var(--color-brand-primary);
+    color: #FFFFFF;
+    padding: var(--space-2xl) var(--space-sm) var(--space-xl) var(--space-sm);
+    text-align: center;
+    border-bottom: 1px solid rgba(255,255,255,0.05);
+}
+
+.header-inner {
+    max-width: 800px;
+    margin: 0 auto;
+}
+
+.catalogue-header h1 {
+    color: #FFFFFF;
+    font-size: clamp(36px, 5vw, 54px);
+    margin-bottom: var(--space-xs);
+}
+
+.catalogue-header p {
+    font-size: 16px;
+    opacity: 0.7;
+    margin-bottom: var(--space-lg);
+    font-weight: 300;
+}
+
+/* Glassmorphic Search & Filters Widget */
+.search-filter-widget {
+    display: flex;
+    gap: var(--space-sm);
+    background: rgba(255, 255, 255, 0.08);
+    backdrop-filter: var(--glass-blur);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    padding: 12px;
+    border-radius: var(--radius-lg);
+    box-shadow: var(--shadow-lg);
+    max-width: 680px;
+    margin: 0 auto;
+}
+
+.search-input-wrapper {
+    display: flex;
+    align-items: center;
+    gap: var(--space-xs);
+    background: rgba(255,255,255,0.05);
+    border: 1px solid rgba(255,255,255,0.1);
+    padding: 12px 16px;
+    border-radius: var(--radius-md);
+    flex: 1;
+}
+
+.search-icon {
+    font-size: 14px;
+    opacity: 0.5;
+}
+
+.search-input-wrapper input {
+    background: transparent;
+    border: none;
+    outline: none;
+    color: #FFFFFF;
+    font-size: 14px;
+    width: 100%;
+}
+
+.search-input-wrapper input::placeholder {
+    color: rgba(255,255,255,0.45);
+}
+
+.select-filter-wrapper select {
+    background: rgba(255,255,255,0.05);
+    border: 1px solid rgba(255,255,255,0.1);
+    color: #FFFFFF;
+    padding: 12px 16px;
+    border-radius: var(--radius-md);
+    font-size: 14px;
+    outline: none;
+    cursor: pointer;
+    height: 100%;
+    min-width: 140px;
+}
+
+.select-filter-wrapper select option {
+    background: var(--color-brand-primary);
+    color: #FFFFFF;
+}
+
+/* Explorer Section */
+.rooms-explorer {
+    padding: var(--space-2xl) var(--space-sm);
+    min-height: 50vh;
+}
+
+/* Empty State Styling */
+.empty-state-card {
+    text-align: center;
+    max-width: 420px;
+    margin: var(--space-2xl) auto;
+    padding: var(--space-lg);
+    background: var(--color-bg-card);
+    border-radius: var(--radius-lg);
+    box-shadow: var(--shadow-sm);
+    border: 1px solid var(--color-border-light);
+}
+
+.empty-icon {
+    font-size: 48px;
+    display: inline-block;
+    margin-bottom: var(--space-sm);
+    opacity: 0.45;
+}
+
+.empty-state-card h3 {
+    font-size: 22px;
+    margin-bottom: var(--space-2xs);
+    color: var(--color-brand-primary);
+}
+
+.empty-state-card p {
+    font-size: 14px;
+    color: var(--color-brand-primary);
+    opacity: 0.65;
+    margin-bottom: var(--space-md);
+}
+
+.reset-search-btn {
+    padding: 10px 20px;
+    background: var(--color-brand-primary);
+    border: none;
+    color: #FFFFFF;
+    font-size: 13px;
+    font-weight: 600;
+    border-radius: var(--radius-full);
+    cursor: pointer;
+    transition: var(--transition-fast);
+}
+
+.reset-search-btn:hover {
+    background: var(--color-brand-gold);
+    color: var(--color-brand-primary);
+}
+
+@media(max-width: 600px) {
+    .search-filter-widget {
+        flex-direction: column;
+    }
+    .select-filter-wrapper select {
+        width: 100%;
+    }
+}

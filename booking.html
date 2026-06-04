@@ -1,0 +1,200 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Complete Reservation | AetherStay</title>
+    <link rel="stylesheet" href="./assets/css/style.css">
+    <link rel="stylesheet" href="./assets/css/booking.css">
+</head>
+<body>
+
+    <!-- ============================================================
+         STRIPE-STYLE PROCESSING OVERLAY
+         ============================================================ -->
+    <div class="checkout-processing-overlay" id="processingOverlay">
+        <div class="processing-spinner" id="processingSpinner"></div>
+        <div class="processing-checkmark" id="processingCheckmark" style="display:none;">✓</div>
+        <p class="processing-label" id="processingLabel">Securing your reservation…</p>
+    </div>
+
+    <!-- Dynamic Header Navbar injected by main.js -->
+
+    <main class="checkout-wrapper animate-fade-up">
+        <div class="checkout-grid">
+
+            <!-- ==============================
+                 LEFT: Form Inputs
+                 ============================== -->
+            <section class="checkout-form-section">
+                <div class="form-section-badge">⚜️ Secure Checkout</div>
+                <h2>Complete Your Reservation</h2>
+                <p class="section-subtext">Zero booking fees · Instant confirmation · Free cancellation within 24h</p>
+
+                <form id="bookingForm" class="aether-form">
+
+                    <!-- Credit Card Visualizer -->
+                    <div class="credit-card-visual" id="creditCardVisual">
+                        <div class="card-chip">💳</div>
+                        <div class="card-number-display" id="cardNumberDisplay">•••• •••• •••• ••••</div>
+                        <div class="card-bottom-row">
+                            <div>
+                                <div class="card-field-label">Cardholder</div>
+                                <div class="card-name-display" id="cardNameDisplay">YOUR NAME</div>
+                            </div>
+                            <div style="text-align:right;">
+                                <div class="card-field-label">Expires</div>
+                                <div class="card-name-display" id="cardExpiryDisplay">MM / YY</div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Guest Details -->
+                    <div class="form-section-label">Guest Information</div>
+
+                    <div class="form-group">
+                        <label for="name">Full Name</label>
+                        <input type="text" id="name" placeholder="e.g. Alex Mercer" required
+                            oninput="syncCardName(this.value)">
+                    </div>
+
+                    <div class="form-group">
+                        <label for="email">Email Address</label>
+                        <input type="email" id="email" placeholder="e.g. alex@mercer.design" required>
+                    </div>
+
+                    <!-- Mock Card Details -->
+                    <div class="form-section-label">Payment Details <span class="demo-badge">Demo Mode</span></div>
+
+                    <div class="form-group">
+                        <label for="cardNumber">Card Number</label>
+                        <input type="text" id="cardNumber" placeholder="1234 5678 9012 3456" maxlength="19"
+                            oninput="syncCardNumber(this.value)" inputmode="numeric">
+                    </div>
+
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label for="cardExpiry">Expiry Date</label>
+                            <input type="text" id="cardExpiry" placeholder="MM / YY" maxlength="7"
+                                oninput="syncCardExpiry(this.value)" inputmode="numeric">
+                        </div>
+                        <div class="form-group">
+                            <label for="cardCvc">CVC</label>
+                            <input type="text" id="cardCvc" placeholder="•••" maxlength="3" inputmode="numeric">
+                        </div>
+                    </div>
+
+                    <!-- Stay Details -->
+                    <div class="form-section-label">Stay Details</div>
+
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label for="checkin">Check-in</label>
+                            <input type="date" id="checkin" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="checkout">Check-out</label>
+                            <input type="date" id="checkout" required>
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="room">Suite Selection</label>
+                        <select id="room">
+                            <option value="deluxe">Deluxe Alabaster Room — ₹3,000 / night</option>
+                            <option value="executive">Executive Champagne Suite — ₹5,000 / night</option>
+                            <option value="suite">Royal Obsidian Penthouse — ₹8,000 / night</option>
+                        </select>
+                    </div>
+
+                    <input type="hidden" id="days" value="0">
+
+                    <!-- Security Badges -->
+                    <div class="security-badges">
+                        <span>🔒 256-bit SSL</span>
+                        <span>✓ PCI Compliant</span>
+                        <span>🛡️ Secure Storage</span>
+                    </div>
+
+                    <button type="submit" class="submit-booking-btn" id="submitBtn">
+                        Confirm Reservation ⚜️
+                    </button>
+                </form>
+            </section>
+
+            <!-- ==============================
+                 RIGHT: Glassmorphic Invoice
+                 ============================== -->
+            <section class="checkout-preview-section">
+                <div class="invoice-glass-card">
+                    <div class="invoice-header">
+                        <span class="invoice-badge">Live Invoice Preview</span>
+                        <h3 id="previewRoomName">Select a Suite</h3>
+                        <p id="previewRoomCapacity">Choose dates to see your total</p>
+                    </div>
+
+                    <div class="invoice-hero-image">
+                        <img id="previewRoomImage"
+                            src="https://images.unsplash.com/photo-1566073771259-6a8506099945?w=600"
+                            alt="Suite Preview">
+                    </div>
+
+                    <!-- Amenities quick list -->
+                    <div class="invoice-amenities" id="invoiceAmenities"></div>
+
+                    <div class="invoice-details-list">
+                        <div class="invoice-row">
+                            <span class="row-label" id="invoiceDaysLabel">Nightly Rate</span>
+                            <span class="row-value" id="invoiceDailyRate">₹0</span>
+                        </div>
+                        <div class="invoice-row">
+                            <span class="row-label">Base Subtotal</span>
+                            <span class="row-value" id="invoiceSubtotal">₹0</span>
+                        </div>
+                        <div class="invoice-row" id="weekendSurgeRow" style="display:none;">
+                            <span class="row-label" style="color:var(--color-warning);">Weekend Surge (+25%)</span>
+                            <span class="row-value" id="invoiceWeekendSurge" style="color:var(--color-warning);">₹0</span>
+                        </div>
+                        <div class="invoice-row">
+                            <span class="row-label">GST & Service (18%)</span>
+                            <span class="row-value" id="invoiceTax">₹0</span>
+                        </div>
+                        <hr class="invoice-divider">
+                        <div class="invoice-row invoice-grand-total">
+                            <span class="row-label">Grand Total</span>
+                            <span class="row-value" id="totalPrice">₹0</span>
+                        </div>
+                    </div>
+
+                    <!-- Dynamic pricing badge -->
+                    <div class="dynamic-price-badge" id="dynamicPriceBadge" style="display:none;">
+                        🤖 AI Dynamic Pricing Applied
+                    </div>
+                </div>
+
+                <!-- Trust Signals -->
+                <div class="trust-signals">
+                    <div class="trust-item">
+                        <span>🏆</span>
+                        <div>
+                            <strong>5.0★ Rated</strong>
+                            <p>14k+ verified stays</p>
+                        </div>
+                    </div>
+                    <div class="trust-item">
+                        <span>🔄</span>
+                        <div>
+                            <strong>Free Cancellation</strong>
+                            <p>Within 24 hours</p>
+                        </div>
+                    </div>
+                </div>
+            </section>
+        </div>
+    </main>
+
+    <script src="./assets/js/main.js"></script>
+    <script src="./assets/js/price.js"></script>
+    <script src="./assets/js/booking.js"></script>
+</body>
+</html>
